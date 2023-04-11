@@ -1,0 +1,77 @@
+:root {
+    --ui-color-lightest: #f4f7fc;
+    --ui-color-light: #dfe7f2;
+    --ui-color-normal: #8fa4c3;
+    --ui-color-dark: #586c91;
+    --ui-color-darkest: #0c111a;
+    --ui-fz-sm: 18px;
+    --ui-fz-md: 24px;
+    --ui-fz-lg: 48px;
+    --ui-fz-xl: 96px;
+}
+
+body {
+    background-color: var(--ui-color-darkest);
+    font-family: 'Roboto Mono', monospace;
+    font-size: var(--ui-fz-md);
+    color: var(--ui-color-lightest);
+}
+
+.main {
+    height: 98vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.row {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+h1 {
+    font-size: var(--ui-fz-lg);
+    font-weight: bold;
+}
+
+.grid {
+    border: 3px solid var(--ui-color-dark);
+    box-sizing: content-box;
+    background-color: var(--ui-color-dark);
+    aspect-ratio: 1 / 1;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(20px, 50px));
+    grid-template-rows: repeat(10, minmax(20px, 50px));
+    grid-gap: 3px;
+}
+
+.grid-item {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--ui-fz-md);
+    font-weight: bold;
+    background-color: var(--ui-color-normal);
+    color: var(--ui-color-dark);
+}
+
+.revealed {
+    background-color: var(--ui-color-light);
+}
+
+.condition {
+    font-size: var(--ui-fz-lg);
+}
+
+@media screen and (width < 500px) {
+    .grid-item {
+        font-size: var(--ui-fz-sm);
+    }
+}
