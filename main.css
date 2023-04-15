@@ -32,23 +32,28 @@ body {
 .row {
     display: flex;
     justify-content: center;
-    margin-top: 30px;
+    margin-top: 16px;
+}
+
+.row:first-child {
+    margin-top: 0;
 }
 
 h1 {
     font-size: var(--ui-fz-lg);
     font-weight: bold;
+    margin-bottom: 0;
 }
 
 .grid {
-    border: 3px solid var(--ui-color-dark);
+    border: 4px solid var(--ui-color-light);
     box-sizing: content-box;
-    background-color: var(--ui-color-dark);
+    background-color: var(--ui-color-light);
     aspect-ratio: 1 / 1;
     display: grid;
     grid-template-columns: repeat(10, minmax(20px, 50px));
     grid-template-rows: repeat(10, minmax(20px, 50px));
-    grid-gap: 3px;
+    grid-gap: 4px;
 }
 
 .grid-item {
@@ -58,16 +63,19 @@ h1 {
     align-items: center;
     font-size: var(--ui-fz-md);
     font-weight: bold;
-    background-color: var(--ui-color-normal);
+    background-color: var(--ui-color-dark);
     color: var(--ui-color-dark);
+    cursor: pointer;
 }
 
 .revealed {
-    background-color: var(--ui-color-light);
+    background-color: var(--ui-color-normal);
+    cursor: auto;
 }
 
 .condition {
     font-size: var(--ui-fz-lg);
+    cursor: pointer;
 }
 
 @media screen and (width < 500px) {

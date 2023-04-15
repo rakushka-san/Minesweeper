@@ -1,27 +1,166 @@
-$(document).ready(function() {
-    const side = 10;
+const playerConditions = new Map();
+playerConditions.set('start', '😁');
+playerConditions.set('middle', '😳');
+playerConditions.set('end', '😰');
+playerConditions.set('victory', '😎');
+playerConditions.set('defeat', '🤯');
 
-    for (let index = 0; index < side * side; index++) {
-        $('.grid').append($('<div>', {
-            class: 'grid-item'
-        }));
+const cellConditions = new Map();
+cellConditions.set('normal', ' ');
+cellConditions.set('marked', '🚩');
+cellConditions.set('bomb', '💣');
+
+const side = 10;
+const chance = 0.15;
+
+let field = [];
+
+let totalMines = 0;
+let minesLeft = 0;
+
+function generateMines() {
+    field = [];
+
+    for (let indexI = 0; indexI < side; indexI++) {
+        let fieldRow = [];
+
+        for (let indexJ = 0; indexJ < side; indexJ++) {
+            if (Math.random() <= chance) {
+                fieldRow.push(1);
+            } else {
+                fieldRow.push(0);
+            }
+        }
+
+        field.push(fieldRow);
     }
 
-    const chance = 0.33;
-    let mines = [];
+    console.log(field);
+}
 
-    for (let index = 0; index < side * side; index++) {
-        if (Math.random() <= chance) {
-            mines.push({
-                y: Math.floor(index / 10),
-                x: index % 10,
-            });
-
-            // для наглядности
-            $('.grid-item:eq(' + index + ')').addClass('revealed');
+function countMines(y, x) {
+    let count = 0;
+    for (let indexI = -1; indexI <= 1; indexI++) {
+        for (let indexJ = -1; indexJ <= 1; indexJ++) {
+            const checkY = Number(Number(y) + Number(indexI));
+            const checkX = Number(Number(x) + Number(indexJ));
+            
+            if (checkY < 0 || checkY >= side) {
+                continue;
+            } else if (checkX < 0 || checkX >= side) {
+                continue;
+            } 
+            else {
+                console.log('checking', checkY, checkX);
+                if (field[checkY][checkX]) {
+                    console.log('found', checkY, checkX)
+                    count ++;
+                }
+            }
         }
     }
 
-    console.log(mines);
-    $('#minesLeft').html(mines.length);
+    return count;
+}
+
+function clickAround(y, x) {
+    for (let indexI = -1; indexI <= 1; indexI++) {
+        for (let indexJ = -1; indexJ <= 1; indexJ++) {
+            const clickY = Number(Number(y) + Number(indexI));
+            const clickX = Number(Number(x) + Number(indexJ));
+
+            if (clickY < 0 || clickY >= side) {
+                continue;
+            } else if (clickX < 0 || clickX >= side) {
+                continue;
+            } 
+            else {
+                const index = clickY * 10 + clickX;
+                const clickCell = $(`.grid-item:eq(${index})`);
+                if (!clickCell.hasClass('revealed')) {
+                    clickCell.click();
+                }
+            }
+        }
+    }
+}
+
+function onDefeat() {
+    $('.condition').html(playerConditions.get('defeat'));
+    for (let cellIndex = 0; cellIndex < side * side; cellIndex++) {
+        const cellY = Math.floor(cellIndex / 10);
+        const cellX = cellIndex % 10;
+        let cellValue = (countMines(cellY, cellX) ? countMines(cellY, cellX) : '');
+
+        if (field[cellY][cellX]) {
+            cellValue = cellConditions.get('bomb');
+        }
+
+        $(`.grid-item:eq(${cellIndex})`)
+            .attr('onclick', '')
+            .addClass('revealed')
+            .html(cellValue);
+    }
+}
+
+function onCellClick(element) {
+    const x = $(element).attr('data-x');
+    const y = $(element).attr('data-y');
+
+    console.log(y, x);
+
+    const index = Number(y * 10) + Number(x);
+
+    $(`.grid-item:eq(${index})`).addClass('revealed');
+
+    if (field[y][x]) {
+        onDefeat();
+    } else {
+        if (countMines(y, x)) {
+            $(element).html(countMines(y, x));
+        } else {
+            clickAround(y, x);
+        }
+    }
+}
+
+function startGame() {
+    for (let index = 0; index < side * side; index++) {
+        $(`.grid-item:eq(${index})`)
+            .removeClass('revealed')
+            .html('')
+            .attr('onclick', 'onCellClick(this)');
+    }
+
+    $('.condition').html(playerConditions.get('start'));
+
+    generateMines();
+
+    totalMines = 0;
+
+    for (let indexI = 0; indexI < side; indexI++) {
+        for (let indexJ = 0; indexJ < side; indexJ++) {
+            if (field[indexI][indexJ]) {
+                totalMines++;
+            }
+        }
+        
+    }
+
+    minesLeft = totalMines;
+
+    $('#minesLeft').html(minesLeft);
+}
+
+$(document).ready(function() {
+    for (let index = 0; index < side * side; index++) {
+        $('.grid').append($('<div>', {
+            class: 'grid-item',
+            'data-y': Math.floor(index / 10),
+            'data-x': index % 10,
+            onclick: 'onCellClick(this)'
+        }));
+    }
+
+    $('.condition').click();
 });
