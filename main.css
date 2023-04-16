@@ -70,11 +70,10 @@ h1 {
 
 .revealed {
     background-color: var(--ui-color-normal);
-    cursor: auto;
 }
 
 .marked {
-    cursor: auto;
+    cursor: default;
 }
 
 #tool {

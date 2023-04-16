@@ -69,6 +69,31 @@ function countMines(y, x) {
     return count;
 }
 
+function countMarks(y, x) {
+    let count = 0;
+    for (let indexI = -1; indexI <= 1; indexI++) {
+        for (let indexJ = -1; indexJ <= 1; indexJ++) {
+            const checkY = Number(Number(y) + Number(indexI));
+            const checkX = Number(Number(x) + Number(indexJ));
+            
+            if (checkY < 0 || checkY >= side) {
+                continue;
+            } else if (checkX < 0 || checkX >= side) {
+                continue;
+            } 
+            else {
+                const index = checkY * 10 + checkX;
+                if ($(`.grid-item:eq(${index})`).hasClass('marked')) {
+                    console.log('found mark on ', checkY, checkX)
+                    count ++;
+                }
+            }
+        }
+    }
+
+    return count;
+}
+
 function clickAround(y, x) {
     for (let indexI = -1; indexI <= 1; indexI++) {
         for (let indexJ = -1; indexJ <= 1; indexJ++) {
@@ -128,9 +153,40 @@ function revealCell(element) {
     }
 }
 
+function decreaseMines() {
+    minesLeft--;
+    $('#minesLeft').html(minesLeft);
+
+    if (minesLeft / totalMines <= 0.33) {
+        $('condition').html(playerConditions.get('end'));
+    } else if (minesLeft / totalMines <= 0.66) {
+        $('condition').html(playerConditions.get('middle'));
+    }
+}
+
+function increaseMines() {
+    minesLeft++;
+    $('#minesLeft').html(minesLeft);
+
+    if (minesLeft / totalMines >= 0.66) {
+        $('condition').html(playerConditions.get('start'));
+    } else if (minesLeft / totalMines >= 0.33) {
+        $('condition').html(playerConditions.get('middle'));
+    }
+}
+
 function markCell(element) {
-    $(element).addClass('marked');
-    $(element).html(cellConditions.get('marked'));
+    if (!$(element).hasClass('revealed')) {
+        $(element).addClass('marked');
+        $(element).html(cellConditions.get('marked'));
+        decreaseMines();
+    }
+}
+
+function unmarkCell(element) {
+    $(element).removeClass('marked');
+    $(element).html('');
+    increaseMines();
 }
 
 function onCellClick(element) {
@@ -138,12 +194,18 @@ function onCellClick(element) {
         if ($(element).hasClass('revealed')) {
             const x = $(element).attr('data-x');
             const y = $(element).attr('data-y');
-            clickAround(y, x);
-        } else {
+            if (countMines(y, x) == countMarks(y, x)) {
+                clickAround(y, x);
+            }
+        } else if (!$(element).hasClass('marked')) {
             revealCell(element);
         }
     } else {
-        markCell(element);
+        if ($(element).hasClass('marked')) {
+            unmarkCell(element);
+        } else {
+            markCell(element);
+        }
     }
 }
 
@@ -161,6 +223,7 @@ function startGame() {
     for (let index = 0; index < side * side; index++) {
         $(`.grid-item:eq(${index})`)
             .removeClass('revealed')
+            .removeClass('marked')
             .html('')
             .attr('onclick', 'onCellClick(this)');
     }
