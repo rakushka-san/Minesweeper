@@ -12,7 +12,11 @@
             href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap"
             rel="stylesheet"
         />
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.6.4.min.js"
+            integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
+            crossorigin="anonymous"
+        ></script>
         <script src="main.js"></script>
     </head>
     <body>
@@ -21,11 +25,14 @@
                 <div class="row">
                     <h1>Minesweeper</h1>
                 </div>
-                <div class="row condition" onclick="startGame()"></div>
-                <div class="row">mines left:&nbsp;<span id="minesLeft">0</span></div>
                 <div class="row">
-                    <div class="grid">
-                    </div>
+                    <div class="condition" onclick="startGame()"></div>
+                </div>
+                <div class="row">
+                    mines left:&nbsp;<span id="minesLeft">0</span>
+                </div>
+                <div class="row">
+                    <div class="grid"></div>
                 </div>
                 <div class="row"></div>
             </div>
