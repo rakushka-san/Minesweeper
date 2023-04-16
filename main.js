@@ -41,7 +41,6 @@ function generateMines() {
         field.push(fieldRow);
     }
 
-    console.log(field);
 }
 
 function countMines(y, x) {
@@ -57,9 +56,7 @@ function countMines(y, x) {
                 continue;
             } 
             else {
-                console.log('checking', checkY, checkX);
                 if (field[checkY][checkX]) {
-                    console.log('found', checkY, checkX)
                     count ++;
                 }
             }
@@ -84,7 +81,6 @@ function countMarks(y, x) {
             else {
                 const index = checkY * 10 + checkX;
                 if ($(`.grid-item:eq(${index})`).hasClass('marked')) {
-                    console.log('found mark on ', checkY, checkX)
                     count ++;
                 }
             }
@@ -134,11 +130,32 @@ function onDefeat() {
     }
 }
 
+function onVictory() {
+    $('.condition').html(playerConditions.get('victory'));
+    for (let cellIndex = 0; cellIndex < side * side; cellIndex++) {
+        $(`.grid-item:eq(${cellIndex})`)
+            .attr('onclick', '')
+    }
+}
+
+function checkVictory() {
+    let allRevealed = true;
+
+    for (let index = 0; index < side * side; index++) {
+        const cell = $(`.grid-item:eq(${index})`);
+        if (!(cell.hasClass('revealed') || cell.hasClass('marked'))) {
+            allRevealed = false;
+        }
+    }
+
+    if (allRevealed) {
+        onVictory();
+    }
+}
+
 function revealCell(element) {
     const x = $(element).attr('data-x');
     const y = $(element).attr('data-y');
-
-    console.log(y, x);
 
     $(element).addClass('revealed');
 
@@ -176,7 +193,7 @@ function increaseMines() {
 }
 
 function markCell(element) {
-    if (!$(element).hasClass('revealed')) {
+    if (!$(element).hasClass('revealed') && minesLeft > 0) {
         $(element).addClass('marked');
         $(element).html(cellConditions.get('marked'));
         decreaseMines();
@@ -206,6 +223,10 @@ function onCellClick(element) {
         } else {
             markCell(element);
         }
+    }
+
+    if (minesLeft == 0) {
+        checkVictory();
     }
 }
 
