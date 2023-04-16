@@ -158,9 +158,9 @@ function decreaseMines() {
     $('#minesLeft').html(minesLeft);
 
     if (minesLeft / totalMines <= 0.33) {
-        $('condition').html(playerConditions.get('end'));
+        $('.condition').html(playerConditions.get('end'));
     } else if (minesLeft / totalMines <= 0.66) {
-        $('condition').html(playerConditions.get('middle'));
+        $('.condition').html(playerConditions.get('middle'));
     }
 }
 
@@ -169,9 +169,9 @@ function increaseMines() {
     $('#minesLeft').html(minesLeft);
 
     if (minesLeft / totalMines >= 0.66) {
-        $('condition').html(playerConditions.get('start'));
+        $('.condition').html(playerConditions.get('start'));
     } else if (minesLeft / totalMines >= 0.33) {
-        $('condition').html(playerConditions.get('middle'));
+        $('.condition').html(playerConditions.get('middle'));
     }
 }
 
