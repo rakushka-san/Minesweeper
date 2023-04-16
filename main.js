@@ -10,6 +10,10 @@ cellConditions.set('normal', ' ');
 cellConditions.set('marked', '🚩');
 cellConditions.set('bomb', '💣');
 
+const toolConditions = new Map();
+toolConditions.set('peek', '👀')
+toolConditions.set('mark', '🚩')
+
 const side = 10;
 const chance = 0.15;
 
@@ -17,6 +21,8 @@ let field = [];
 
 let totalMines = 0;
 let minesLeft = 0;
+
+let currentTool = toolConditions.get('peek');
 
 function generateMines() {
     field = [];
@@ -103,7 +109,7 @@ function onDefeat() {
     }
 }
 
-function onCellClick(element) {
+function revealCell(element) {
     const x = $(element).attr('data-x');
     const y = $(element).attr('data-y');
 
@@ -121,6 +127,22 @@ function onCellClick(element) {
         } else {
             clickAround(y, x);
         }
+    }
+}
+
+function onCellClick(element) {
+    if (currentTool == toolConditions.get('peek')) {
+        revealCell(element);
+    }
+}
+
+function switchTool() {
+    if (currentTool == toolConditions.get('peek')) {
+        $('#tool').html(toolConditions.get('mark'));
+        currentTool = toolConditions.get('mark');
+    } else {
+        $('#tool').html(toolConditions.get('peek'));
+        currentTool = toolConditions.get('peek');
     }
 }
 

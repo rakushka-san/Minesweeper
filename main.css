@@ -73,6 +73,15 @@ h1 {
     cursor: auto;
 }
 
+.marked {
+    cursor: auto;
+}
+
+#tool {
+    cursor: pointer;
+    user-select: none;
+}
+
 .condition {
     font-size: var(--ui-fz-lg);
     cursor: pointer;
