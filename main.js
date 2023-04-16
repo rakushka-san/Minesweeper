@@ -83,7 +83,7 @@ function clickAround(y, x) {
             else {
                 const index = clickY * 10 + clickX;
                 const clickCell = $(`.grid-item:eq(${index})`);
-                if (!clickCell.hasClass('revealed')) {
+                if (!clickCell.hasClass('revealed') && !clickCell.hasClass('marked')) {
                     clickCell.click();
                 }
             }
@@ -115,9 +115,7 @@ function revealCell(element) {
 
     console.log(y, x);
 
-    const index = Number(y * 10) + Number(x);
-
-    $(`.grid-item:eq(${index})`).addClass('revealed');
+    $(element).addClass('revealed');
 
     if (field[y][x]) {
         onDefeat();
@@ -130,9 +128,22 @@ function revealCell(element) {
     }
 }
 
+function markCell(element) {
+    $(element).addClass('marked');
+    $(element).html(cellConditions.get('marked'));
+}
+
 function onCellClick(element) {
     if (currentTool == toolConditions.get('peek')) {
-        revealCell(element);
+        if ($(element).hasClass('revealed')) {
+            const x = $(element).attr('data-x');
+            const y = $(element).attr('data-y');
+            clickAround(y, x);
+        } else {
+            revealCell(element);
+        }
+    } else {
+        markCell(element);
     }
 }
 
